@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS IAM Policy Generator</title>
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #ff6b6b;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-color), #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 700px;
+        }
+
+        .left-panel {
+            padding: 30px;
+            background: var(--light-color);
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            max-height: 800px;
+        }
+
+        .right-panel {
+            padding: 30px;
+            background: var(--dark-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3::before {
+            content: "⚙️";
+            font-size: 1.5rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .service-group {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .service-group:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
+        }
+
+        .service-group.limited {
+            border-color: var(--warning-color);
+            background: linear-gradient(135deg, #fff3cd, #ffffff);
+        }
+
+        .service-group.full-access {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, #d4edda, #ffffff);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .service-title {
+            font-weight: bold;
+            color: var(--dark-color);
+            font-size: 1rem;
+        }
+
+        .access-badge {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .limited-badge {
+            background: var(--warning-color);
+            color: #856404;
+        }
+
+        .full-badge {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox:checked {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .custom-checkbox:checked::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: #495057;
+            cursor: pointer;
+        }
+
+        .input-group {
+            margin-top: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .search-section {
+            margin-bottom: 20px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .output-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .json-output {
+            background: #1a252f;
+            border: 2px solid #34495e;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            flex-grow: 1;
+            min-height: 500px;
+            max-height: 600px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #1e7e34);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #545b62);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e0a800);
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                margin: 10px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .policy-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .policy-info h4 {
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .policy-info p {
+            color: #424242;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .select-all-section {
+            background: var(--light-color);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AWS IAM Policy Generator</h1>
+            <p>Generate comprehensive IAM policies with limited and full access permissions for AWS services</p>
+        </div>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="policy-info">
+                    <h4>📋 Policy Configuration</h4>
+                    <p>Select the AWS services you need and configure their access levels. Limited access services have predefined permissions, while full access services grant complete permissions.</p>
+                </div>
+
+                <div class="select-all-section">
+                    <div class="button-group" style="justify-content: center; margin-top: 0;">
+                        <button class="btn btn-warning" onclick="selectAllLimited()">Select All Limited</button>
+                        <button class="btn btn-success" onclick="selectAllFull()">Select All Full Access</button>
+                        <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Limited Access Services</h3>
+                    <div class="services-grid">
+                        <div class="service-group limited">
+                            <div class="service-header">
+                                <span class="service-title">AWS Marketplace</span>
+                                <span class="access-badge limited-badge">Limited</span>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="marketplace" class="custom-checkbox" checked>
+                                <label for="marketplace" class="checkbox-label">Marketplace subscription access</label>
+                            </div>
+                        </div>
+
+                        <div class="service-group limited">
+                            <div class="service-header">
+                                <span class="service-title">AWS CloudTrail</span>
+                                <span class="access-badge limited-badge">Limited</span>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="cloudtrail" class="custom-checkbox" checked>
+                                <label for="cloudtrail" class="checkbox-label">CloudTrail management access</label>
+                            </div>
+                        </div>
+
+                        <div class="service-group limited">
+                            <div class="service-header">
+                                <span class="service-title">AWS CloudWatch</span>
+                                <span class="access-badge limited-badge">Limited</span>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="cloudwatch" class="custom-checkbox" checked>
+                                <label for="cloudwatch" class="checkbox-label">CloudWatch monitoring & logging</label>
+                            </div>
+                        </div>
+
+                        <div class="service-group limited">
+                            <div class="service-header">
+                                <span class="service-title">AWS IAM</span>
+                                <span class="access-badge limited-badge">Limited</span>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="iam" class="custom-checkbox" checked>
+                                <label for="iam" class="checkbox-label">IAM management access</label>
+                            </div>
+                        </div>
+
+                        <div class="service-group limited">
+                            <div class="service-header">
+                                <span class="service-title">Amazon S3</span>
+                                <span class="access-badge limited-badge">Bucket-Specific</span>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="s3" class="custom-checkbox" checked>
+                                <label for="s3" class="checkbox-label">S3 bucket-specific access</label>
+                            </div>
+                            <div class="input-group">
+                                <label for="bucketName">S3 Bucket Name:</label>
+                                <input type="text" id="bucketName" placeholder="enter-your-BucketName" value="my-app-bucket">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Full Access Services</h3>
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search services..." onkeyup="searchServices()">
+                    </div>
+                    <div class="services-grid" id="fullAccessServices">
+                        <!-- Full access services will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="generatePolicy()">Generate Policy</button>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <h3>Generated IAM Policy</h3>
+                <div class="json-output" id="jsonOutput">
+{
+    "Version": "2012-10-17",
+    "Statement": []
+}
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="downloadPolicy()">Download JSON</button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPolicy = null;
+
+        // const fullAccessServicesData = [
+        //     { id: 'bedrock', name: 'Amazon Bedrock', actions: ['bedrock:*'] },
+        //     { id: 'opensearch', name: 'Amazon OpenSearch', actions: ['es:*'] },
+        //     { id: 'rds-aurora', name: 'Amazon RDS Aurora', actions: ['rds:*'] },
+        //     { id: 'dynamodb', name: 'Amazon DynamoDB', actions: ['dynamodb:*'] },
+        //     { id: 'lambda', name: 'AWS Lambda', actions: ['lambda:*'] },
+        //     { id: 'glue', name: 'AWS Glue', actions: ['glue:*'] },
+        //     { id: 'athena', name: 'Amazon Athena', actions: ['athena:*'] },
+        //     { id: 'sagemaker', name: 'Amazon SageMaker', actions: ['sagemaker:*'] },
+        //     { id: 'sagemaker-notebook', name: 'SageMaker Notebook', actions: ['sagemaker:*Notebook*'] },
+        //     { id: 'apigateway', name: 'Amazon API Gateway', actions: ['apigateway:*'] },
+        //     { id: 'lex', name: 'Amazon Lex', actions: ['lex:*'] },
+        //     { id: 'redshift', name: 'Amazon Redshift', actions: ['redshift:*'] },
+        //     { id: 'emr', name: 'Amazon EMR', actions: ['elasticmapreduce:*'] },
+        //     { id: 'quicksight', name: 'Amazon QuickSight', actions: ['quicksight:*'] },
+        //     { id: 'ec2', name: 'Amazon EC2', actions: ['ec2:*'] },
+        //     { id: 'cloudfront', name: 'Amazon CloudFront', actions: ['cloudfront:*'] },
+        //     { id: 'cognito', name: 'Amazon Cognito', actions: ['cognito-identity:*', 'cognito-idp:*', 'cognito-sync:*'] },
+        //     { id: 'cloudformation', name: 'AWS CloudFormation', actions: ['cloudformation:*'] },
+        //     { id: 'secretsmanager', name: 'AWS Secrets Manager', actions: ['secretsmanager:*'] },
+        //     { id: 'kendra', name: 'Amazon Kendra', actions: ['kendra:*'] },
+        //     { id: 'sns', name: 'Amazon SNS', actions: ['sns:*'] },
+        //     { id: 'sqs', name: 'Amazon SQS', actions: ['sqs:*'] },
+        //     { id: 'transcribe', name: 'Amazon Transcribe', actions: ['transcribe:*'] },
+        //     { id: 'comprehend', name: 'Amazon Comprehend', actions: ['comprehend:*'] },
+        //     { id: 'ses', name: 'Amazon SES', actions: ['ses:*'] },
+        //     { id: 'route53', name: 'Amazon Route 53', actions: ['route53:*', 'route53domains:*'] },
+        //     { id: 'eks', name: 'Amazon EKS', actions: ['eks:*'] },
+        //     { id: 'ecr', name: 'Amazon ECR', actions: ['ecr:*'] },
+        //     { id: 'ecs', name: 'Amazon ECS', actions: ['ecs:*'] },
+        //     { id: 'elb', name: 'Elastic Load Balancing', actions: ['elasticloadbalancing:*'] },
+        //     { id: 'waf', name: 'AWS WAF', actions: ['waf:*'] },
+        //     { id: 'cloud9', name: 'AWS Cloud9', actions: ['cloud9:*'] },
+        //     { id: 'codebuild', name: 'AWS CodeBuild', actions: ['codebuild:*'] },
+        //     { id: 'codecommit', name: 'AWS CodeCommit', actions: ['codecommit:*'] },
+        //     { id: 'codedeploy', name: 'AWS CodeDeploy', actions: ['codedeploy:*'] },
+        //     { id: 'codepipeline', name: 'AWS CodePipeline', actions: ['codepipeline:*'] }
+        // ];
+        const fullAccessServicesData = [
+            { id: 'bedrock', name: 'Amazon Bedrock', actions: ['bedrock:*'] },
+            { id: 'opensearch', name: 'Amazon OpenSearch', actions: ['es:*'] },
+            { id: 'rds-aurora', name: 'Amazon RDS Aurora', actions: ['rds:*'] },
+            { id: 'dynamodb', name: 'Amazon DynamoDB', actions: ['dynamodb:*'] },
+            { id: 'lambda', name: 'AWS Lambda', actions: ['lambda:*'] },
+            { id: 'glue', name: 'AWS Glue', actions: ['glue:*'] },
+            { id: 'athena', name: 'Amazon Athena', actions: ['athena:*'] },
+            { id: 'sagemaker', name: 'Amazon SageMaker', actions: ['sagemaker:*'] },
+            { id: 'sagemaker-notebook', name: 'SageMaker Notebook', actions: ['sagemaker:*Notebook*'] },
+            { id: 'apigateway', name: 'Amazon API Gateway', actions: ['apigateway:*'] },
+            { id: 'lex', name: 'Amazon Lex', actions: ['lex:*'] },
+            { id: 'redshift', name: 'Amazon Redshift', actions: ['redshift:*'] },
+            { id: 'emr', name: 'Amazon EMR', actions: ['elasticmapreduce:*'] },
+            { id: 'quicksight', name: 'Amazon QuickSight', actions: ['quicksight:*'] },
+            { id: 'ec2', name: 'Amazon EC2', actions: ['ec2:*'] },
+            { id: 'cloudfront', name: 'Amazon CloudFront', actions: ['cloudfront:*'] },
+            { id: 'cognito', name: 'Amazon Cognito', actions: ['cognito-identity:*', 'cognito-idp:*', 'cognito-sync:*'] },
+            { id: 'cloudformation', name: 'AWS CloudFormation', actions: ['cloudformation:*'] },
+            { id: 'secretsmanager', name: 'AWS Secrets Manager', actions: ['secretsmanager:*'] },
+            { id: 'kendra', name: 'Amazon Kendra', actions: ['kendra:*'] },
+            { id: 'sns', name: 'Amazon SNS', actions: ['sns:*'] },
+            { id: 'sqs', name: 'Amazon SQS', actions: ['sqs:*'] },
+            { id: 'transcribe', name: 'Amazon Transcribe', actions: ['transcribe:*'] },
+            { id: 'comprehend', name: 'Amazon Comprehend', actions: ['comprehend:*'] },
+            { id: 'ses', name: 'Amazon SES', actions: ['ses:*'] },
+            { id: 'route53', name: 'Amazon Route 53', actions: ['route53:*', 'route53domains:*'] },
+            { id: 'eks', name: 'Amazon EKS', actions: ['eks:*'] },
+            { id: 'ecr', name: 'Amazon ECR', actions: ['ecr:*'] },
+            { id: 'ecs', name: 'Amazon ECS', actions: ['ecs:*'] },
+            { id: 'elb', name: 'Elastic Load Balancing', actions: ['elasticloadbalancing:*'] },
+            { id: 'waf', name: 'AWS WAF', actions: ['waf:*'] },
+            { id: 'cloud9', name: 'AWS Cloud9', actions: ['cloud9:*'] },
+            { id: 'codebuild', name: 'AWS CodeBuild', actions: ['codebuild:*'] },
+            { id: 'codecommit', name: 'AWS CodeCommit', actions: ['codecommit:*'] },
+            { id: 'codedeploy', name: 'AWS CodeDeploy', actions: ['codedeploy:*'] },
+            { id: 'codepipeline', name: 'AWS CodePipeline', actions: ['codepipeline:*'] },
+            { id: 'batch', name: 'AWS Batch', actions: ['batch:*'] },
+            { id: 'elasticbeanstalk', name: 'AWS Elastic Beanstalk', actions: ['elasticbeanstalk:*'] },
+            { id: 'fargate', name: 'AWS Fargate', actions: ['fargate:*'] },
+            { id: 'storagegateway', name: 'AWS Storage Gateway', actions: ['storagegateway:*'] },
+            { id: 'backup', name: 'AWS Backup', actions: ['backup:*'] },
+            { id: 'fsx', name: 'Amazon FSx', actions: ['fsx:*'] },
+            { id: 'neptune', name: 'Amazon Neptune', actions: ['neptune:*'] },
+            { id: 'qldb', name: 'Amazon Quantum Ledger Database (QLDB)', actions: ['qldb:*'] },
+            { id: 'timestream', name: 'Amazon Timestream', actions: ['timestream:*'] },
+            { id: 'globalaccelerator', name: 'AWS Global Accelerator', actions: ['globalaccelerator:*'] },
+            { id: 'privatelink', name: 'AWS PrivateLink', actions: ['privatelink:*'] },
+            { id: 'appmesh', name: 'AWS App Mesh', actions: ['appmesh:*'] },
+            { id: 'certificatemanager', name: 'AWS Certificate Manager', actions: ['acm:*'] },
+            { id: 'directoryservice', name: 'AWS Directory Service', actions: ['directoryservice:*'] },
+            { id: 'firewallmanager', name: 'AWS Firewall Manager', actions: ['firewallmanager:*'] },
+            { id: 'autoscaling', name: 'AWS Auto Scaling', actions: ['autoscaling:*'] },
+            { id: 'clouddevelopmentkit', name: 'AWS Cloud Development Kit (CDK)', actions: ['clouddevelopmentkit:*'] },
+            { id: 'systemsmanager', name: 'AWS Systems Manager', actions: ['ssm:*'] },
+            { id: 'dataexchange', name: 'AWS Data Exchange', actions: ['dataexchange:*'] },
+            { id: 'datapipeline', name: 'AWS Data Pipeline', actions: ['datapipeline:*'] },
+            { id: 'lakeformation', name: 'AWS Lake Formation', actions: ['lakeformation:*'] },
+            { id: 'personalize', name: 'Amazon Personalize', actions: ['personalize:*'] },
+            { id: 'forecast', name: 'Amazon Forecast', actions: ['forecast:*'] },
+            { id: 'textract', name: 'Amazon Textract', actions: ['textract:*'] },
+            { id: 'eventbridge', name: 'Amazon EventBridge', actions: ['events:*'] },
+            { id: 'stepfunctions', name: 'AWS Step Functions', actions: ['states:*'] },
+            { id: 'mq', name: 'Amazon MQ', actions: ['mq:*'] },
+            { id: 'codestar', name: 'AWS CodeStar', actions: ['codestar:*'] },
+            { id: 'xray', name: 'AWS X-Ray', actions: ['xray:*'] },
+            { id: 'cloudshell', name: 'AWS CloudShell', actions: ['cloudshell:*'] },
+            { id: 'iotcore', name: 'AWS IoT Core', actions: ['iot:*'] },
+            { id: 'iotgreengrass', name: 'AWS IoT Greengrass', actions: ['greengrass:*'] },
+            { id: 'iotanalytics', name: 'AWS IoT Analytics', actions: ['iotanalytics:*'] },
+            { id: 'gamelift', name: 'Amazon GameLift', actions: ['gamelift:*'] },
+            { id: 'elastictc', name: 'Amazon Elastic Transcoder', actions: ['elastictc:*'] },
+            { id: 'mediaconvert', name: 'AWS Elemental MediaConvert', actions: ['mediaconvert:*'] },
+            { id: 'applicationdiscovery', name: 'AWS Application Discovery Service', actions: ['discovery:*'] },
+            { id: 'migrationhub', name: 'AWS Migration Hub', actions: ['migrationhub:*'] },
+            { id: 'robomaker', name: 'AWS RoboMaker', actions: ['robomaker:*'] },
+            { id: 'groundstation', name: 'AWS Ground Station', actions: ['groundstation:*'] },
+            { id: 'managedblockchain', name: 'Amazon Managed Blockchain', actions: ['managedblockchain:*'] },
+            { id: 'workspaces', name: 'Amazon WorkSpaces', actions: ['workspaces:*'] },
+            { id: 'appstream', name: 'Amazon AppStream', actions: ['appstream:*'] },
+            { id: 'braket', name: 'Amazon Braket', actions: ['braket:*'] },
+            { id: 'sumerian', name: 'Amazon Sumerian', actions: ['sumerian:*'] }
+        ];
+
+        function renderFullAccessServices(services) {
+            const container = document.getElementById('fullAccessServices');
+            container.innerHTML = '';
+            services.forEach(service => {
+                const serviceDiv = document.createElement('div');
+                serviceDiv.className = 'service-group full-access';
+                serviceDiv.innerHTML = `
+                    <div class="service-header">
+                        <span class="service-title">${service.name}</span>
+                        <span class="access-badge full-badge">Full Access</span>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="${service.id}" class="custom-checkbox">
+                        <label for="${service.id}" class="checkbox-label">Full ${service.name} access</label>
+                    </div>
+                `;
+                container.appendChild(serviceDiv);
+            });
+        }
+
+        function searchServices() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const filteredServices = fullAccessServicesData.filter(service =>
+                service.name.toUpperCase().includes(filter)
+            );
+            renderFullAccessServices(filteredServices);
+        }
+
+        function selectAllLimited() {
+            document.querySelectorAll('.limited .custom-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            generatePolicy();
+        }
+
+        function selectAllFull() {
+            document.querySelectorAll('.full-access .custom-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            generatePolicy();
+        }
+
+        function generatePolicy() {
+            const policy = {
+                "Version": "2012-10-17",
+                "Statement": []
+            };
+
+            // Limited Access Services
+            if (document.getElementById('marketplace').checked) {
+                policy.Statement.push({
+                    "Sid": "MarketplaceSubscriptionAccess",
+                    "Effect": "Allow",
+                    "Action": [
+                        "aws-marketplace:Subscribe",
+                        "aws-marketplace:ViewSubscriptions",
+                        "aws-marketplace:StartSubscription",
+                        "aws-marketplace:AcceptAgreement"
+                    ],
+                    "Resource": "*"
+                });
+            }
+
+            if (document.getElementById('cloudtrail').checked) {
+                policy.Statement.push({
+                    "Sid": "CloudTrailLimitedAccess",
+                    "Effect": "Allow",
+                    "Action": [
+                        "cloudtrail:CreateTrail",
+                        "cloudtrail:DescribeTrails",
+                        "cloudtrail:GetTrailStatus",
+                        "cloudtrail:ListTags",
+                        "cloudtrail:AddTags",
+                        "cloudtrail:StartLogging",
+                        "cloudtrail:StopLogging",
+                        "cloudtrail:UpdateTrail",
+                        "cloudtrail:GetEventSelectors",
+                        "cloudtrail:PutEventSelectors",
+                        "cloudtrail:LookupEvents"
+                    ],
+                    "Resource": "*"
+                });
+            }
+
+            if (document.getElementById('cloudwatch').checked) {
+                policy.Statement.push({
+                    "Sid": "CloudWatchLimitedAccess",
+                    "Effect": "Allow",
+                    "Action": [
+                        "cloudwatch:DescribeAlarmHistory",
+                        "cloudwatch:DescribeAlarms",
+                        "cloudwatch:DescribeAlarmsForMetric",
+                        "cloudwatch:GetMetricStatistics",
+                        "cloudwatch:ListMetrics",
+                        "cloudwatch:PutMetricAlarm",
+                        "cloudwatch:PutMetricData",
+                        "cloudwatch:SetAlarmState",
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream",
+                        "logs:DescribeLogGroups",
+                        "logs:DescribeLogStreams",
+                        "logs:PutLogEvents",
+                        "logs:GetLogEvents"
+                    ],
+                    "Resource": "*"
+                });
+            }
+
+            if (document.getElementById('iam').checked) {
+                policy.Statement.push({
+                    "Sid": "IAMManagementAccess",
+                    "Effect": "Allow",
+                    "Action": [
+                        "iam:AttachRolePolicy",
+                        "iam:CreatePolicyVersion",
+                        "iam:CreatePolicy",
+                        "iam:GetPolicy",
+                        "iam:GetPolicyVersion",
+                        "iam:CreateServiceLinkedRole",
+                        "iam:PassRole",
+                        "iam:GetRole",
+                        "iam:CreateRole",
+                        "iam:DetachRolePolicy",
+                        "iam:GetRolePolicy",
+                        "iam:ListAttachedRolePolicies",
+                        "iam:ListPolicies",
+                        "iam:ListPolicyTags",
+                        "iam:ListPolicyVersions",
+                        "iam:ListRolePolicies",
+                        "iam:ListRoleTags",
+                        "iam:ListRoles",
+                        "iam:PutRolePolicy",
+                        "iam:UpdateAssumeRolePolicy",
+                        "iam:UpdateRole",
+                        "iam:DeletePolicyVersion",
+                        "iam:UpdateRoleDescription",
+                        "iam:CreateVirtualMFADevice",
+                        "iam:EnableMFADevice",
+                        "iam:GetMFADevice",
+                        "iam:ListMFADeviceTags",
+                        "iam:ListMFADevices",
+                        "iam:ListVirtualMFADevices",
+                        "iam:ResyncMFADevice",
+                        "iam:TagMFADevice"
+                    ],
+                    "Resource": "*"
+                });
+            }
+
+            if (document.getElementById('s3').checked) {
+                const bucketName = document.getElementById('bucketName').value || 'enter-your-BucketName';
+
+                policy.Statement.push({
+                    "Sid": "S3FullAccess",
+                    "Effect": "Allow",
+                    "Action": ["s3:*"],
+                    "Resource": [
+                        `arn:aws:s3:::${bucketName}`,
+                        `arn:aws:s3:::${bucketName}/*`
+                    ]
+                });
+
+                policy.Statement.push({
+                    "Sid": "AllowListAllBuckets",
+                    "Effect": "Allow",
+                    "Action": "s3:ListAllMyBuckets",
+                    "Resource": "*"
+                });
+            }
+
+            // Full Access Services
+            fullAccessServicesData.forEach(service => {
+                const checkbox = document.getElementById(service.id);
+                if (checkbox && checkbox.checked) {
+                    policy.Statement.push({
+                        "Sid": `${service.name.replace(/\s+/g, '')}FullAccess`,
+                        "Effect": "Allow",
+                        "Action": service.actions,
+                        "Resource": "*"
+                    });
+                }
+            });
+
+            currentPolicy = policy;
+            document.getElementById('jsonOutput').textContent = JSON.stringify(policy, null, 2);
+
+            // Add success animation
+            const output = document.getElementById('jsonOutput');
+            output.style.border = '2px solid #28a745';
+            setTimeout(() => {
+                output.style.border = '2px solid #34495e';
+            }, 1000);
+        }
+
+        function downloadPolicy() {
+            if (!currentPolicy) {
+                alert('Please generate a policy first!');
+                return;
+            }
+
+            const blob = new Blob([JSON.stringify(currentPolicy, null, 2)], {
+                type: 'application/json'
+            });
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+
+            a.href = url;
+            a.download = `aws-iam-policy-${timestamp}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Show success feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Downloaded!';
+            btn.style.background = '#28a745';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
+            }, 2000);
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('jsonOutput');
+            const text = output.textContent;
+
+            if (!text || text.includes('Select services')) {
+                alert('Please generate a policy first!');
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'linear-gradient(135deg, #6c757d, #545b62)';
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy to clipboard. Please copy manually.');
+            });
+        }
+
+        function clearAll() {
+            document.querySelectorAll('.custom-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            document.getElementById('bucketName').value = 'my-app-bucket';
+            document.getElementById('jsonOutput').textContent = `{
+    "Version": "2012-10-17",
+    "Statement": []
+}`;
+            currentPolicy = null;
+        }
+
+        // Initialize the full access services on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFullAccessServices(fullAccessServicesData);
+            generatePolicy();
+        });
+
+        // Auto-generate policy when checkboxes change
+        document.addEventListener('change', function(event) {
+            if (event.target.classList.contains('custom-checkbox') || event.target.id === 'bucketName') {
+                setTimeout(generatePolicy, 100);
+            }
+        });
+
+        // Add smooth transitions for interactions
+        document.querySelectorAll('.service-group').forEach(group => {
+            group.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+
+            group.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
