@@ -16,13 +16,11 @@
             --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             --border-radius: 12px;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -30,7 +28,6 @@
             padding: 20px;
             color: #333;
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -40,32 +37,27 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
         }
-
         .header {
             background: linear-gradient(135deg, var(--accent-color), #ee5a24);
             color: white;
             padding: 30px;
             text-align: center;
         }
-
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
         }
-
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0;
             min-height: 700px;
         }
-
         .left-panel {
             padding: 30px;
             background: var(--light-color);
@@ -73,7 +65,6 @@
             overflow-y: auto;
             max-height: 800px;
         }
-
         .right-panel {
             padding: 30px;
             background: var(--dark-color);
@@ -81,11 +72,9 @@
             display: flex;
             flex-direction: column;
         }
-
         .section {
             margin-bottom: 25px;
         }
-
         .section h3 {
             color: var(--dark-color);
             margin-bottom: 15px;
@@ -94,18 +83,15 @@
             align-items: center;
             gap: 10px;
         }
-
         .section h3::before {
             content: "⚙️";
             font-size: 1.5rem;
         }
-
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 15px;
         }
-
         .service-group {
             background: white;
             border: 2px solid #e9ecef;
@@ -113,59 +99,49 @@
             padding: 15px;
             transition: all 0.3s ease;
         }
-
         .service-group:hover {
             border-color: var(--primary-color);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
         }
-
         .service-group.limited {
             border-color: var(--warning-color);
             background: linear-gradient(135deg, #fff3cd, #ffffff);
         }
-
         .service-group.full-access {
             border-color: var(--success-color);
             background: linear-gradient(135deg, #d4edda, #ffffff);
         }
-
         .service-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
-
         .service-title {
             font-weight: bold;
             color: var(--dark-color);
             font-size: 1rem;
         }
-
         .access-badge {
             padding: 4px 8px;
             border-radius: 15px;
             font-size: 0.7rem;
             font-weight: bold;
         }
-
         .limited-badge {
             background: var(--warning-color);
             color: #856404;
         }
-
         .full-badge {
             background: var(--success-color);
             color: white;
         }
-
         .checkbox-container {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-
         .custom-checkbox {
             appearance: none;
             width: 18px;
@@ -176,12 +152,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .custom-checkbox:checked {
             background: var(--primary-color);
             border-color: var(--primary-color);
         }
-
         .custom-checkbox:checked::after {
             content: "✓";
             position: absolute;
@@ -192,17 +166,14 @@
             font-weight: bold;
             font-size: 12px;
         }
-
         .checkbox-label {
             font-size: 0.9rem;
             color: #495057;
             cursor: pointer;
         }
-
         .input-group {
             margin-top: 10px;
         }
-
         .input-group label {
             display: block;
             margin-bottom: 5px;
@@ -210,7 +181,6 @@
             color: #495057;
             font-size: 0.9rem;
         }
-
         .input-group input {
             width: 100%;
             padding: 8px;
@@ -219,17 +189,14 @@
             font-size: 13px;
             transition: border-color 0.3s ease;
         }
-
         .input-group input:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
-
         .search-bar {
             margin-bottom: 20px;
         }
-
         .search-bar input {
             width: 100%;
             padding: 10px;
@@ -237,11 +204,9 @@
             border-radius: 6px;
             font-size: 14px;
         }
-
         .search-section {
             margin-bottom: 20px;
         }
-
         .generate-btn {
             background: linear-gradient(135deg, var(--primary-color), #0056b3);
             color: white;
@@ -251,13 +216,11 @@
             cursor: pointer;
             width: 100%;
         }
-
         .output-section h3 {
             color: white;
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
-
         .json-output {
             background: #1a252f;
             border: 2px solid #34495e;
@@ -272,14 +235,12 @@
             min-height: 500px;
             max-height: 600px;
         }
-
         .button-group {
             display: flex;
             gap: 15px;
             margin-top: 20px;
             flex-wrap: wrap;
         }
-
         .btn {
             padding: 12px 20px;
             border: none;
@@ -291,65 +252,52 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), #0056b3);
             color: white;
         }
-
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
         }
-
         .btn-success {
             background: linear-gradient(135deg, var(--success-color), #1e7e34);
             color: white;
         }
-
         .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
-
         .btn-secondary {
             background: linear-gradient(135deg, #6c757d, #545b62);
             color: white;
         }
-
         .btn-secondary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
         }
-
         .btn-warning {
             background: linear-gradient(135deg, var(--warning-color), #e0a800);
             color: #212529;
         }
-
         .btn-warning:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
         }
-
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
-
             .header h1 {
                 font-size: 2rem;
             }
-
             .container {
                 margin: 10px;
             }
-
             .services-grid {
                 grid-template-columns: 1fr;
             }
         }
-
         .policy-info {
             background: #e3f2fd;
             border-left: 4px solid #2196f3;
@@ -357,18 +305,15 @@
             margin-bottom: 20px;
             border-radius: var(--border-radius);
         }
-
         .policy-info h4 {
             color: #1976d2;
             margin-bottom: 8px;
         }
-
         .policy-info p {
             color: #424242;
             font-size: 14px;
             line-height: 1.5;
         }
-
         .select-all-section {
             background: var(--light-color);
             border: 2px solid #dee2e6;
@@ -385,14 +330,12 @@
             <h1>AWS IAM Policy Generator</h1>
             <p>Generate comprehensive IAM policies with limited and full access permissions for AWS services</p>
         </div>
-
         <div class="main-content">
             <div class="left-panel">
                 <div class="policy-info">
                     <h4>📋 Policy Configuration</h4>
                     <p>Select the AWS services you need and configure their access levels. Limited access services have predefined permissions, while full access services grant complete permissions.</p>
                 </div>
-
                 <div class="select-all-section">
                     <div class="button-group" style="justify-content: center; margin-top: 0;">
                         <button class="btn btn-warning" onclick="selectAllLimited()">Select All Limited</button>
@@ -400,7 +343,6 @@
                         <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
                     </div>
                 </div>
-
                 <div class="section">
                     <h3>Limited Access Services</h3>
                     <div class="services-grid">
@@ -414,7 +356,6 @@
                                 <label for="marketplace" class="checkbox-label">Marketplace subscription access</label>
                             </div>
                         </div>
-
                         <div class="service-group limited">
                             <div class="service-header">
                                 <span class="service-title">AWS CloudTrail</span>
@@ -425,18 +366,16 @@
                                 <label for="cloudtrail" class="checkbox-label">CloudTrail management access</label>
                             </div>
                         </div>
-
                         <div class="service-group limited">
                             <div class="service-header">
                                 <span class="service-title">AWS CloudWatch</span>
                                 <span class="access-badge limited-badge">Limited</span>
                             </div>
                             <div class="checkbox-container">
-                                <input type="checkbox" id="cloudwatch" class="custom-checkbox" checked>
-                                <label for="cloudwatch" class="checkbox-label">CloudWatch monitoring & logging</label>
+                                <input type="checkbox" id="cloudwatch-limited" class="custom-checkbox" checked>
+                                <label for="cloudwatch-limited" class="checkbox-label">CloudWatch limited access</label>
                             </div>
                         </div>
-
                         <div class="service-group limited">
                             <div class="service-header">
                                 <span class="service-title">AWS IAM</span>
@@ -447,7 +386,6 @@
                                 <label for="iam" class="checkbox-label">IAM management access</label>
                             </div>
                         </div>
-
                         <div class="service-group limited">
                             <div class="service-header">
                                 <span class="service-title">Amazon S3</span>
@@ -462,9 +400,18 @@
                                 <input type="text" id="bucketName" placeholder="enter-your-BucketName" value="my-app-bucket">
                             </div>
                         </div>
+                        <div class="service-group limited">
+                            <div class="service-header">
+                                <span class="service-title">VPC Networking</span>
+                                <span class="access-badge limited-badge">Limited</span>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="VPCNetworkingAccess" class="custom-checkbox" checked>
+                                <label for="VPCNetworkingAccess" class="checkbox-label">VPC Networking Access</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 <div class="section">
                     <h3>Full Access Services</h3>
                     <div class="search-bar">
@@ -474,12 +421,10 @@
                         <!-- Full access services will be dynamically inserted here -->
                     </div>
                 </div>
-
                 <div class="button-group">
                     <button class="btn btn-primary" onclick="generatePolicy()">Generate Policy</button>
                 </div>
             </div>
-
             <div class="right-panel">
                 <h3>Generated IAM Policy</h3>
                 <div class="json-output" id="jsonOutput">
@@ -495,50 +440,11 @@
             </div>
         </div>
     </div>
-
     <script>
         let currentPolicy = null;
-
-        // const fullAccessServicesData = [
-        //     { id: 'bedrock', name: 'Amazon Bedrock', actions: ['bedrock:*'] },
-        //     { id: 'opensearch', name: 'Amazon OpenSearch', actions: ['es:*'] },
-        //     { id: 'rds-aurora', name: 'Amazon RDS Aurora', actions: ['rds:*'] },
-        //     { id: 'dynamodb', name: 'Amazon DynamoDB', actions: ['dynamodb:*'] },
-        //     { id: 'lambda', name: 'AWS Lambda', actions: ['lambda:*'] },
-        //     { id: 'glue', name: 'AWS Glue', actions: ['glue:*'] },
-        //     { id: 'athena', name: 'Amazon Athena', actions: ['athena:*'] },
-        //     { id: 'sagemaker', name: 'Amazon SageMaker', actions: ['sagemaker:*'] },
-        //     { id: 'sagemaker-notebook', name: 'SageMaker Notebook', actions: ['sagemaker:*Notebook*'] },
-        //     { id: 'apigateway', name: 'Amazon API Gateway', actions: ['apigateway:*'] },
-        //     { id: 'lex', name: 'Amazon Lex', actions: ['lex:*'] },
-        //     { id: 'redshift', name: 'Amazon Redshift', actions: ['redshift:*'] },
-        //     { id: 'emr', name: 'Amazon EMR', actions: ['elasticmapreduce:*'] },
-        //     { id: 'quicksight', name: 'Amazon QuickSight', actions: ['quicksight:*'] },
-        //     { id: 'ec2', name: 'Amazon EC2', actions: ['ec2:*'] },
-        //     { id: 'cloudfront', name: 'Amazon CloudFront', actions: ['cloudfront:*'] },
-        //     { id: 'cognito', name: 'Amazon Cognito', actions: ['cognito-identity:*', 'cognito-idp:*', 'cognito-sync:*'] },
-        //     { id: 'cloudformation', name: 'AWS CloudFormation', actions: ['cloudformation:*'] },
-        //     { id: 'secretsmanager', name: 'AWS Secrets Manager', actions: ['secretsmanager:*'] },
-        //     { id: 'kendra', name: 'Amazon Kendra', actions: ['kendra:*'] },
-        //     { id: 'sns', name: 'Amazon SNS', actions: ['sns:*'] },
-        //     { id: 'sqs', name: 'Amazon SQS', actions: ['sqs:*'] },
-        //     { id: 'transcribe', name: 'Amazon Transcribe', actions: ['transcribe:*'] },
-        //     { id: 'comprehend', name: 'Amazon Comprehend', actions: ['comprehend:*'] },
-        //     { id: 'ses', name: 'Amazon SES', actions: ['ses:*'] },
-        //     { id: 'route53', name: 'Amazon Route 53', actions: ['route53:*', 'route53domains:*'] },
-        //     { id: 'eks', name: 'Amazon EKS', actions: ['eks:*'] },
-        //     { id: 'ecr', name: 'Amazon ECR', actions: ['ecr:*'] },
-        //     { id: 'ecs', name: 'Amazon ECS', actions: ['ecs:*'] },
-        //     { id: 'elb', name: 'Elastic Load Balancing', actions: ['elasticloadbalancing:*'] },
-        //     { id: 'waf', name: 'AWS WAF', actions: ['waf:*'] },
-        //     { id: 'cloud9', name: 'AWS Cloud9', actions: ['cloud9:*'] },
-        //     { id: 'codebuild', name: 'AWS CodeBuild', actions: ['codebuild:*'] },
-        //     { id: 'codecommit', name: 'AWS CodeCommit', actions: ['codecommit:*'] },
-        //     { id: 'codedeploy', name: 'AWS CodeDeploy', actions: ['codedeploy:*'] },
-        //     { id: 'codepipeline', name: 'AWS CodePipeline', actions: ['codepipeline:*'] }
-        // ];
         const fullAccessServicesData = [
             { id: 'bedrock', name: 'Amazon Bedrock', actions: ['bedrock:*'] },
+            { id: 'cloudwatch', name: 'Amazon CloudWatch', actions: ['cloudwatch:*'] },
             { id: 'opensearch', name: 'Amazon OpenSearch', actions: ['es:*'] },
             { id: 'rds-aurora', name: 'Amazon RDS Aurora', actions: ['rds:*'] },
             { id: 'dynamodb', name: 'Amazon DynamoDB', actions: ['dynamodb:*'] },
@@ -706,7 +612,7 @@
                 });
             }
 
-            if (document.getElementById('cloudwatch').checked) {
+            if (document.getElementById('cloudwatch-limited').checked) {
                 policy.Statement.push({
                     "Sid": "CloudWatchLimitedAccess",
                     "Effect": "Allow",
@@ -725,6 +631,26 @@
                         "logs:DescribeLogStreams",
                         "logs:PutLogEvents",
                         "logs:GetLogEvents"
+                    ],
+                    "Resource": "*"
+                });
+            }
+
+            if (document.getElementById('VPCNetworkingAccess').checked) {
+                policy.Statement.push({
+                    "Sid": "VPCNetworkingAccess",
+                    "Effect": "Allow",
+                    "Action": [
+                        "ec2:DescribeVpcs",
+                        "ec2:DescribeSubnets",
+                        "ec2:DescribeSecurityGroups",
+                        "ec2:CreateNetworkInterface",
+                        "ec2:CreateSecurityGroup",
+                        "ec2:AuthorizeSecurityGroupIngress",
+                        "ec2:AuthorizeSecurityGroupEgress",
+                        "ec2:DescribeNetworkInterfaces",
+                        "ec2:DescribeNatGateways",
+                        "ec2:DescribeAccountAttributes"
                     ],
                     "Resource": "*"
                 });
@@ -796,7 +722,6 @@
 
             if (document.getElementById('s3').checked) {
                 const bucketName = document.getElementById('bucketName').value || 'enter-your-BucketName';
-
                 policy.Statement.push({
                     "Sid": "S3FullAccess",
                     "Effect": "Allow",
@@ -806,7 +731,6 @@
                         `arn:aws:s3:::${bucketName}/*`
                     ]
                 });
-
                 policy.Statement.push({
                     "Sid": "AllowListAllBuckets",
                     "Effect": "Allow",
@@ -844,22 +768,18 @@
                 alert('Please generate a policy first!');
                 return;
             }
-
             const blob = new Blob([JSON.stringify(currentPolicy, null, 2)], {
                 type: 'application/json'
             });
-
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-
             a.href = url;
             a.download = `aws-iam-policy-${timestamp}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-
             // Show success feedback
             const btn = event.target;
             const originalText = btn.textContent;
@@ -874,12 +794,10 @@
         function copyToClipboard() {
             const output = document.getElementById('jsonOutput');
             const text = output.textContent;
-
             if (!text || text.includes('Select services')) {
                 alert('Please generate a policy first!');
                 return;
             }
-
             navigator.clipboard.writeText(text).then(() => {
                 const btn = event.target;
                 const originalText = btn.textContent;
@@ -898,7 +816,6 @@
             document.querySelectorAll('.custom-checkbox').forEach(checkbox => {
                 checkbox.checked = false;
             });
-
             document.getElementById('bucketName').value = 'my-app-bucket';
             document.getElementById('jsonOutput').textContent = `{
     "Version": "2012-10-17",
@@ -925,7 +842,6 @@
             group.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-3px)';
             });
-
             group.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0)';
             });
